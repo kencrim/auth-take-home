@@ -1,0 +1,19 @@
+{
+  "name": "auth-take-home",
+  "version": "1.0.0",
+  "description": "Implementation of OAuth2 authenticator",
+  "scripts": {
+    "start": "nodemon server/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kencrim/auth-take-home.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://github.com/kencrim/auth-take-home#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.5.0"
+  }
+}
