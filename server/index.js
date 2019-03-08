@@ -25,8 +25,9 @@ app.post('/api/users', verifyToken, (req, res) => {
 app.post('/api/login', (req, res) => {
 	const user = {
 		id: 1,
-		username: 'Ken',
-		email: 'kencrim@gmail.com'
+		email: 'kencrim@gmail.com',
+		firstName: 'Ken',
+		lastName: 'Crimmins'
 	}
 	jwt.sign({user},'key', (err, token) => {
 		res.json({

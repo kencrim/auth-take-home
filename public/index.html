@@ -2,11 +2,25 @@
 <html lang="eng">
 <head>
 	<meta charset="utf-8" />
-	<meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
+	<meta name="google-signin-client_id" content="537521020853-sr6vfmg034hi3cf10sj17q8qu9plbdf2.apps.googleusercontent.com">
 	<title>Add Title</title>
 	<script src="https://apis.google.com/js/platform.js" async defer></script>
 </head>
 <body>
-	<div id='app'>Hello World!</div>
+	<div class="g-signin2" data-onsuccess="onSignIn"></div>
+	<a href="#" onclick="signOut();">Sign out</a>
+	<script>
+		function onSignIn(googleUser) {
+  			var profile = googleUser.getBasicProfile();
+  			console.log('Name: ' + profile.getName());
+  			console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+		}
+		function signOut() {
+		    var auth2 = gapi.auth2.getAuthInstance();
+			auth2.signOut().then(function () {
+		    	console.log('User signed out.');
+			});
+		}
+	</script>
 </body>
 </html>
