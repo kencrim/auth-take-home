@@ -12,20 +12,16 @@ db.connect( (err) => {
 	}
 });
 
-const findUser = (email, callback) => {
-	db.query(`SELECT * FROM users WHERE email = '${email}'`, (err, results) => {
-		if(err) {
-			callback(err, null);
+module.exports.findUser = (email, callback) => {
+	db.query(`SELECT * FROM users WHERE email = '${email}' limit 1`, (err, results) => {
+		if(err || results.length == 0) {
+			callback(true, null);
 		} else {
+			console.log(results)
 			callback(null, results);
 		}
 	})
 }
-findUser('kencrim@gmail.com', (err, results) => {
-	if(err) {
-		console.log(err);
-	} else {
-		console.log(results);
-	}
-});
+
+
 

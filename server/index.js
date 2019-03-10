@@ -1,10 +1,9 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser')
-
 const authenticateGoogleToken = require('./googleTokenAuthenticator.js');
 const jwt = require('jsonwebtoken');
-
+const db = require('../database/index.js');
 const PORT = 3000;
 const app = express();
 
@@ -18,10 +17,10 @@ app.get('/', (req, res) => {
 
 // Incomplete, will redirect to the user console once token is verified 
 app.post('/api/users', verifyToken, (req, res) => {
-	jwt.verify(req.token, 'key', (err, data) => {
+	jwt.verify(req.token, 'huddl_takehome_key', (err, data) => {
 		if(err) {
 			// replace with custom error message
-			res.sendStatus(403)
+			res.sendStatus(403) // better error handling needed here
 		} else {
 			// will actually redirect user to main interface
 			res.json({
@@ -33,20 +32,25 @@ app.post('/api/users', verifyToken, (req, res) => {
 });
 
 app.post('/api/login', (req, res) => {
-	//dummy data, will be replaced by a db query
-	const user = {
-		id: 1,
-		email: 'kencrim@gmail.com',
-		firstName: 'Ken',
-		lastName: 'Crimmins'
-	}
+	// Extract Google account token from request body
 	let token = req.body.id_token;
-	authenticateGoogleToken(token).catch(console.error);;
-	jwt.sign({user},'key', (err, token) => {
-		res.json({
-			token
-		})
-	});
+	// Authenticate and parse token with OAuth2
+	authenticateGoogleToken(token, (googleAcct) => {
+		//Check database for email in account 
+		db.findUser(googleAcct.email, (err, userData) => {
+			if(err) {
+				res.sendStatus(403) // better error handling needed here
+			} else {
+				// If email is found, respond with token
+				jwt.sign({userData},'huddl_takehome_key', (err, token) => {
+					res.json({
+						token
+					})
+				});	
+			}
+		});
+	}).catch(console.error); // better error handling needed here
+
 });
 
 app.listen(PORT, () => {
@@ -61,6 +65,6 @@ function verifyToken(req, res, next) {
 		req.token = token;
 		next();
 	} else {
-		res.sendStatus(403);
+		res.sendStatus(403); // better error handling needed here
 	}
 }
