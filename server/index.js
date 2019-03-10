@@ -25,7 +25,7 @@ app.post('/api/users', verifyToken, (req, res) => {
 			// will actually redirect user to main interface
 			res.json({
 				message: 'Authentication Successful!',
-				data
+				user: data
 			});
 		}
 	});
@@ -39,7 +39,7 @@ app.post('/api/login', (req, res) => {
 		//Check database for email in account 
 		db.findUser(googleAcct.email, (err, userData) => {
 			if(err) {
-				res.sendStatus(403) // better error handling needed here
+				res.status(403).send(); // better error handling needed here
 			} else {
 				// If email is found, respond with token
 				jwt.sign({userData},'huddl_takehome_key', (err, token) => {
