@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 
 // Incomplete, will redirect to the user console once token is verified 
 app.post('/api/users', verifyToken, (req, res) => {
-	jwt.verify(req.token, 'huddl_takehome_key', (err, data) => {
+	jwt.verify(req.token, 'huddl_takehome_login', (err, data) => {
 		if(err) {
 			// replace with custom error message
 			res.sendStatus(403) // better error handling needed here
@@ -42,15 +42,14 @@ app.post('/api/login', (req, res) => {
 				res.status(403).send(); // better error handling needed here
 			} else {
 				// If email is found, respond with token
-				jwt.sign({userData},'huddl_takehome_key', (err, token) => {
+				jwt.sign({userData},'huddl_takehome_login', (err, token) => {
 					res.json({
 						token
 					})
 				});	
 			}
 		});
-	}).catch(console.error); // better error handling needed here
-
+	}).catch((err) => console.log(err));
 });
 
 app.listen(PORT, () => {
