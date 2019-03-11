@@ -41,14 +41,16 @@ app.post('/api/auth', (req, res) => {
 	// Authenticate and parse token with OAuth2
 	authenticateGoogleToken(token, (googleAcct) => {
 		//Check database for email in account 
+		console.log(googleAcct);
 		db.findUser(googleAcct.email, (err, userData) => {
 			if(err) {
 				res.sendStatus(403); // better error handling needed here
 			} else {
-				// If the name in the database doesn't match the one from google, update it
-				if(userData.name !== googleAcct.given_name) {
+				// If the user's info isn't in the database, update it
+				if(userData.name === null) {
 					userData.name = googleAcct.given_name;
-					db.updateUserName(googleAcct.email, googleAcct.given_name) 
+					userData.picture_url = googleAcct.picture;
+					db.updateUserInfo(googleAcct.email, googleAcct.given_name, googleAcct.picture); 
 				}
 				// If email is found, respond with token
 				jwt.sign({userData},'huddl_takehome_login', {expiresIn: '2 days'}, (err, token) => {

@@ -109,6 +109,7 @@ class App extends Component {
 		})
 		.then(this.responseParser)
 		.then((response) => {
+			console.log(response.emails);
 			this.setState({emails:response.emails});
 		});
 	}

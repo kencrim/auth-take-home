@@ -94,16 +94,16 @@ table th {
   flex-direction: column;
   vertical-align: center;
   margin-top: 100px;
-  margin-left: 30%;
-  margin-right: 30%;
+  margin-left: 40%;
+  margin-right: 40%;
   border-radius: 5px;
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
   min-height: 200px;
-  width: 40%;
+  width: 300px;
 }
 
 .dashboard h3 {
-  font-size: 140%;
+  font-size: 120%;
   font-family: Roboto, sans-serif;
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;

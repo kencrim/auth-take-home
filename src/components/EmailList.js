@@ -1,22 +1,25 @@
 import React from 'react';
+import EmailListItem from './EmailListItem.js';
 
 export default props => {
   return ( 
     <div className='email-list'>
       {props.emails.length > 0 ?
       	<table>
-      		<th>Registered Users</th>
-      		{props.emails.map((email) => {
-      			return (
-      				<tr>
-      					<td>{email}</td>
-  						</tr>
-   					);
-   				})}
+          <thead>
+            <tr>
+        	     <th>Registered Users</th>
+            </tr>
+          </thead>
+          <tbody>
+        		{props.emails.map((item) => {
+        			return <EmailListItem item={item}/>
+     				})}
+          </tbody>
       	</table>
         :
         <p className='loading-message'>Loading user list...</p>
     }
     </div>
   )
-};
+}

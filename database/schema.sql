@@ -5,15 +5,16 @@ USE whitelist;
 
 CREATE TABLE IF NOT EXISTS users (
   `user_id` INTEGER NOT NULL AUTO_INCREMENT,
-  `email` VARCHAR(30 ) NOT NULL UNIQUE,
-  `name` VARCHAR(50) NULL DEFAULT NULL,
+  `email` VARCHAR(30) NOT NULL UNIQUE,
+  `name` VARCHAR(30) NULL DEFAULT NULL,
+  `picture` VARCHAR(200) NULL DEFAULT NULL,
   PRIMARY KEY (`user_id`)
 );
 
 INSERT INTO users (user_id, email)
 VALUES (null, 'kencrim@gmail.com');
 
-/* The following commands are to prevent the MySQL 8.0+ 
+/* The following commands are to help prevent the MySQL 8.0+ 
  *  compatibility issue referenced in database/index.js */
 
 DROP USER IF EXISTS nodeuser@'localhost';

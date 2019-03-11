@@ -17,8 +17,8 @@ module.exports.findUser = (email, callback) => {
 	})
 }
 
-module.exports.updateUserName = (email, name) => {
-	db.query(`UPDATE users SET name='${name}' WHERE email = '${email}'`, (err) => {
+module.exports.updateUserInfo = (email, name, pic_url) => {
+	db.query(`UPDATE users SET name='${name}', picture='${pic_url}' WHERE email='${email}'`, (err) => {
 		if(err) {
 			console.log(err);
 		} 
@@ -26,13 +26,10 @@ module.exports.updateUserName = (email, name) => {
 }
 
 module.exports.getAllEmails = (callback) => {
-	db.query(`SELECT email FROM users`, (err, results) => {
+	db.query(`SELECT * FROM users`, (err, results) => {
 		if(err) {
 			callback(err, null);
 		} else {
-			results.forEach((result, index) => {
-				results[index] = result.email;
-			});
 			callback(null, results);
 		}
 	});
