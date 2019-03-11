@@ -8,7 +8,7 @@ export default props => {
       	<table>
           <thead>
             <tr>
-        	     <th>Registered Users</th>
+        	     <th className="list-header">Registered Users</th>
             </tr>
           </thead>
           <tbody>

@@ -3,9 +3,9 @@ import UserAvatar from 'react-user-avatar';
 
 export default props => {
   return (
-    <tr>
-      <td><UserAvatar src={props.item.picture} name={props.item.email}/></td>
-      <td>{props.item.email}</td>
+    <tr className="list-cell">
+      <td className="list-icon"><UserAvatar size={20} src={props.item.picture} name={props.item.email}/></td>
+      <td className="list-email">{props.item.email}</td>
 	 </tr>
   )
 }
