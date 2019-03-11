@@ -10,14 +10,17 @@ class App extends Component {
 		this.state = {
 			loggedIn: false,
 			emails: [],
-			user: null
+			user: null,
+			emailInput: '',
 		}
 		this.onSignIn = this.onSignIn.bind(this);
 		this.signOut = this.signOut.bind(this);
-		this.responseParser = this.responseParser.bind(this);
+		this.responseHandler = this.responseHandler.bind(this);
 		this.authenticateGoogleUser = this.authenticateGoogleUser.bind(this);
 		this.authenticatePageUser = this.authenticatePageUser.bind(this);
 		this.getUserEmails = this.getUserEmails.bind(this);
+		this.handleChange = this.handleChange.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
 	onSignIn(googleUser) {
@@ -37,18 +40,6 @@ class App extends Component {
 		});
 	}
 
-	responseParser(res) {
-		// Check for error
-		if(!res.ok) {
-			// If user has not been found in the database, or their token has expired sign them out
-			this.signOut();
-			throw Error(res.statusText);
-		} else {
-			// Parse response to json
-			return res.json();
-		}
-	}
-
 	authenticateGoogleUser(id_token) {
 		// Sends Google token to server, where it can be verified and parsed
 		return fetch('http://lvh.me:3000/api/auth', {
@@ -57,16 +48,18 @@ class App extends Component {
 			cache: "default", 
 			credentials: "same-origin",
 			headers: {
-		    	'Content-Type': 'application/json',
+				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({id_token}),
 		})
 		// Parses the response to json, or throws error
-		.then(this.responseParser)
+		.then((res) => {return this.responseHandler(res, 'Failed: either your email isn\'t registered, \
+			or you submitted an invalid Google token.')})
 		// Sends token back to server, where it is parsed into user info
-		.then((response) => { 
-			this.authenticatePageUser(response.token)
-		});
+		.then((json) => { 
+			this.authenticatePageUser(json.token);
+		})
+		.catch();
 	}
 
 	authenticatePageUser(token) {
@@ -81,12 +74,12 @@ class App extends Component {
 				'authorization': 'Bearer ' + token
 			},
 		})
-		.then(this.responseParser)
+		.then((res) => {return this.responseHandler(res, 'Failed: you submitted an expired or invalid token')})
 		// Once validated and parsed, update state with info from response
-		.then(response => {
-     		this.setState({
+		.then(json => {
+		 		this.setState({
      			loggedIn: true,
-        		user: response.user.userData.name
+        		user: json.user.userData.name
       		});
       		// Save new token cookie for two days
       		let date = new Date;
@@ -96,7 +89,8 @@ class App extends Component {
       // Bind token to window for the session
       window.token = token;
 			this.getUserEmails(token);
-		});
+		})
+		.catch();
 	}
 
 	addUser(email, token) {
@@ -111,6 +105,15 @@ class App extends Component {
       },
       body: JSON.stringify({email})
     }) 
+    .then((res) => {
+    	if(!res.ok){
+    		alert('Failed: email is either invalid or already in use.');
+    	} else {
+    		this.setState({emailInput: ''});
+    		this.getUserEmails(window.token);
+    	}
+		})
+    .catch();
 	}
 
 	getUserEmails(token) {
@@ -123,12 +126,38 @@ class App extends Component {
 				'authorization': 'Bearer ' + token
 			}
 		})
-		.then(this.responseParser)
-		.then((response) => {
-			console.log(response.emails);
-			this.setState({emails:response.emails});
-		});
+		.then((res) => {
+			if(!res.ok) {
+				throw Error(res.statusText);
+			} else {
+				return res.json();
+			}
+		})
+		.then((json) => {
+			this.setState({emails:json.emails});
+		})
+		.catch();
 	}
+
+		responseHandler(res, errorMessage) {
+		// Check for error
+		if(!res.ok) {
+			alert(errorMessage)
+			throw Error(res.statusText);
+		} else {
+			// Parse response to json
+			return res.json();
+		}
+	}
+
+  handleChange(event) {
+    this.setState({emailInput: event.target.value});
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    this.addUser(this.state.emailInput, window.token);
+  }
 
 	componentDidMount() {
 		// Get cookies array
@@ -143,8 +172,19 @@ class App extends Component {
 	render() {
 		return (
 			<div>
-				<Header loggedIn={this.state.loggedIn} onSignIn={this.onSignIn} signOut={this.signOut}/>
-        		<Dashboard loggedIn={this.state.loggedIn} name={this.state.user} emails={this.state.emails}/>
+        <Header 
+          loggedIn={this.state.loggedIn} 
+          onSignIn={this.onSignIn} 
+          signOut={this.signOut}
+        />
+        <Dashboard  
+          loggedIn={this.state.loggedIn} 
+          name={this.state.user} 
+          emails={this.state.emails}
+          emailInput={this.state.emailInput}
+          handleChange={this.handleChange}
+          handleSubmit={this.handleSubmit}
+        />
 			</div>
 		)
 	}

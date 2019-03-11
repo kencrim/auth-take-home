@@ -1,5 +1,6 @@
 import React from 'react';
 import EmailList from './EmailList.js';
+import UserInput from './UserInput.js'
 
 export default props => {
   return ( 
@@ -7,11 +8,17 @@ export default props => {
   		{
 	  		props.loggedIn ? 
         <div>
-				  <h3>{props.name ? props.name + '\'s': 'Your'} Dashboard: </h3>
+          <UserInput
+            loggedIn = {props.loggedIn}
+            emailInput={props.emailInput}
+            handleChange={props.handleChange}
+            handleSubmit={props.handleSubmit}
+          />
+				  <h3 className='dash-message'>{props.name ? props.name + '\'s': 'Your'} Dashboard: </h3>
           <EmailList emails={props.emails} />
         </div>		
 				:
-				<h3>Welcome to the site! Log in to continue.</h3>
+				<h3 className='welcome-message'>Welcome to the site! Log in to get started.</h3>
   		}
   	</div>
   )
