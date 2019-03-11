@@ -35,5 +35,13 @@ module.exports.getAllEmails = (callback) => {
 	});
 }
 
+module.exports.addUser = (email, callback) => {
+	db.query(`INSERT INTO users (user_id, email) VALUES (null, '${email}'`, (err) => {
+		if(err) {
+			callback(err);
+		}
+	});
+}
+
 
 

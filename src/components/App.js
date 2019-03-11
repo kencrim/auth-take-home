@@ -93,8 +93,24 @@ class App extends Component {
       		date.setDate(date.getDate() + 2);
 			let cookie = "token=" + token + ';' + 'expires=' + date.toUTCString() + ';';
 			document.cookie = cookie;
+      // Bind token to window for the session
+      window.token = token;
 			this.getUserEmails(token);
 		});
+	}
+
+	addUser(email, token) {
+    return fetch('http://lvh.me:3000/api/adduser', {
+      method: "POST",
+      mode: "cors",
+      cache: "default", 
+      credentials: "same-origin",
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({email})
+    }) 
 	}
 
 	getUserEmails(token) {

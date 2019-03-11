@@ -118,9 +118,9 @@ td {
 	display: flex;
   flex-direction: column;
   vertical-align: center;
-  margin-top: 100px;
-  margin-left: 35%;
-  margin-right: 35%;
+  position: absolute;
+  top: 15%;
+  left:35%;
   border-radius: 5px;
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
   min-height: 200px;

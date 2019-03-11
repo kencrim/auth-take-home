@@ -77,16 +77,33 @@ app.post('/api/login', verifyToken, (req, res) => {
 	});
 });
 
+app.post('/api/adduser', verifyToken, (req, res) => {
+	jwt.verify(req.token, 'huddl_takehome_login', (err, data) => {
+		if(err) {
+			res.sendStatus(403);
+		} else {
+			let email = req.body.email.toLowerCase();
+			// make sure that the inserted string is an actual email
+			if(validateEmail(email)) {
+				db(addUser(email, (err, result) => {
+					if(err) {
+						res.sendStatus(500);
+					} else {
+						// send new email array
+					}
+				}));
+			} else {
+				res.sendStatus(403);	
+			}
+		}
+	});
+});
 
 app.use(express.static(path.join(__dirname, '../dist')));
 
-
-// const server = http.createServer(app);
-
-
 app.listen(PORT, () => console.log(`Server Running on port ${PORT}`));
 
-function verifyToken(req, res, next) {
+const verifyToken = (req, res, next) => {
 	const bearerHeader = req.headers['authorization'];
 	if(typeof bearerHeader !== "undefined") {
 		const bearer = bearerHeader.split(' ');
@@ -96,4 +113,11 @@ function verifyToken(req, res, next) {
 	} else {
 		res.sendStatus(403); // better error handling needed here
 	}
+}
+
+const validateEmail = (email) => {
+    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|
+    (".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|
+    (([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
 }
