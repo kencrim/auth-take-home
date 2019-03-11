@@ -5,9 +5,8 @@ USE whitelist;
 
 CREATE TABLE IF NOT EXISTS users (
   `user_id` INTEGER NOT NULL AUTO_INCREMENT,
-  `email` VARCHAR(30 ) NOT NULL,
-  `first_name` VARCHAR(250) NULL DEFAULT NULL,
-  `last_name` VARCHAR(30) NULL DEFAULT NULL,
+  `email` VARCHAR(30 ) NOT NULL UNIQUE,
+  `name` VARCHAR(50) NULL DEFAULT NULL,
   PRIMARY KEY (`user_id`)
 );
 

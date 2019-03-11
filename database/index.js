@@ -17,10 +17,19 @@ module.exports.findUser = (email, callback) => {
 		if(err || results.length == 0) {
 			callback(Error(), null);
 		} else {
-			console.log(results)
-			callback(null, results[0]);
+			userRecord = results[0];
+			console.log(userRecord);
+			callback(null, {email: userRecord.email, })
 		}
 	})
+}
+
+module.exports.updateUserName = (email, name) => {
+	db.query(`UPDATE users SET name='${name}' WHERE email = '${email}'`, (err) => {
+		if(err) {
+			console.log(err);
+		} 
+	});
 }
 
 

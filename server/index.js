@@ -4,18 +4,22 @@ const bodyParser = require('body-parser')
 const authenticateGoogleToken = require('./googleTokenAuthenticator.js');
 const jwt = require('jsonwebtoken');
 const db = require('../database/index.js');
-const PORT = 3000;
+const PORT = process.env.PORT || '3000';
+const http = require('http')
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-app.get('/', (req, res) => {
-	res.sendFile(path.join(__dirname, '../client/index.html'));
-});
+app.use('/', express.static(path.join(__dirname, '..', 'dist')));
+app.use('/dist', express.static(path.join(__dirname, '..', 'dist')));
 
+const routes = require('./routes');
 
-// Incomplete, will redirect to the user console once token is verified 
+app.use('/', routes);
+
+app.set('port', PORT);
+
 app.post('/api/users', verifyToken, (req, res) => {
 	jwt.verify(req.token, 'huddl_takehome_login', (err, data) => {
 		if(err) {
@@ -41,8 +45,13 @@ app.post('/api/login', (req, res) => {
 			if(err) {
 				res.status(403).send(); // better error handling needed here
 			} else {
+				// If the name in the database doesn't match, update it
+				if(userData.name !== googleAcct.given_name) {
+					userData.name = googleAcct.given_name;
+					db.updateUserName(googleAcct.email, googleAcct.given_name) 
+				}
 				// If email is found, respond with token
-				jwt.sign({userData},'huddl_takehome_login', (err, token) => {
+				jwt.sign({userData},'huddl_takehome_login', {expiresIn: '2 days'}, (err, token) => {
 					res.json({
 						token
 					})
@@ -52,9 +61,13 @@ app.post('/api/login', (req, res) => {
 	}).catch((err) => console.log(err));
 });
 
-app.listen(PORT, () => {
-	console.log('Now listening on port ' + PORT);
-});
+app.use(express.static(path.join(__dirname, '../dist')));
+
+
+const server = http.createServer(app);
+
+
+server.listen(PORT, () => console.log(`Server Running on port ${PORT}`));
 
 function verifyToken(req, res, next) {
 	const bearerHeader = req.headers['authorization'];
