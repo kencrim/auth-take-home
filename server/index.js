@@ -5,7 +5,7 @@ const authenticateGoogleToken = require('./googleTokenAuthenticator.js');
 const jwt = require('jsonwebtoken');
 const db = require('../database/index.js');
 const PORT = process.env.PORT || '3000';
-const http = require('http')
+const routes = require('./routes');
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -14,28 +14,28 @@ app.use(bodyParser.json())
 app.use('/', express.static(path.join(__dirname, '..', 'dist')));
 app.use('/dist', express.static(path.join(__dirname, '..', 'dist')));
 
-const routes = require('./routes');
-
-app.use('/', routes);
 
 app.set('port', PORT);
 
-app.post('/api/users', verifyToken, (req, res) => {
-	jwt.verify(req.token, 'huddl_takehome_login', (err, data) => {
+app.get('/api/users', verifyToken, (req, res) => {
+	jwt.verify(req.token, 'huddl_takehome_login', (err) => {
 		if(err) {
-			// replace with custom error message
-			res.sendStatus(403) // better error handling needed here
+			res.sendStatus(403);
 		} else {
-			// will actually redirect user to main interface
-			res.json({
-				message: 'Authentication Successful!',
-				user: data
+			db.getAllEmails((err, emails) => {
+				if(err) {
+					res.sendStatus(500);
+				} else {
+					res.json({emails});
+				}
 			});
 		}
-	});
+	});	
 });
 
-app.post('/api/login', (req, res) => {
+app.use('/', routes);
+
+app.post('/api/auth', (req, res) => {
 	// Extract Google account token from request body
 	let token = req.body.id_token;
 	// Authenticate and parse token with OAuth2
@@ -43,9 +43,9 @@ app.post('/api/login', (req, res) => {
 		//Check database for email in account 
 		db.findUser(googleAcct.email, (err, userData) => {
 			if(err) {
-				res.status(403).send(); // better error handling needed here
+				res.sendStatus(403); // better error handling needed here
 			} else {
-				// If the name in the database doesn't match, update it
+				// If the name in the database doesn't match the one from google, update it
 				if(userData.name !== googleAcct.given_name) {
 					userData.name = googleAcct.given_name;
 					db.updateUserName(googleAcct.email, googleAcct.given_name) 
@@ -54,20 +54,35 @@ app.post('/api/login', (req, res) => {
 				jwt.sign({userData},'huddl_takehome_login', {expiresIn: '2 days'}, (err, token) => {
 					res.json({
 						token
-					})
+					});
 				});	
 			}
 		});
 	}).catch((err) => console.log(err));
 });
 
+app.post('/api/login', verifyToken, (req, res) => {
+	// verifies token from request header
+	jwt.verify(req.token, 'huddl_takehome_login', (err, data) => {
+		if(err) {
+			res.sendStatus(403);
+		} else {
+			// returns account info to be displayed on page
+			res.json({
+				user: data
+			});
+		}
+	});
+});
+
+
 app.use(express.static(path.join(__dirname, '../dist')));
 
 
-const server = http.createServer(app);
+// const server = http.createServer(app);
 
 
-server.listen(PORT, () => console.log(`Server Running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server Running on port ${PORT}`));
 
 function verifyToken(req, res, next) {
 	const bearerHeader = req.headers['authorization'];
