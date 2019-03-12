@@ -1,6 +1,7 @@
 module.exports.options = {
-	host: 'localhost',
-	user: 'nodeuser',
-	password: 'pw',
-	db: 'whitelist' 
+	host: 'database',
+	port: '3306',
+	user: 'root',
+	password: 'password',
+	database: 'whitelist'
 }

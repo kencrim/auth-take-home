@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  auth-app:
+    build: ./
+    depends_on:
+      - 'database'
+    ports: 
+      - '3000:3000'
+
+  database:
+    build: database/
+    ports:
+      - "3306:3306"
+    restart: on-failure
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_MY_DATABASE=whitelist
