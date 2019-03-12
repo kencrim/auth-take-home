@@ -57,6 +57,7 @@ class App extends Component {
 			or you submitted an invalid Google token.')})
 		// Sends token back to server, where it is parsed into user info
 		.then((json) => { 
+			console.log(json.token);
 			this.authenticatePageUser(json.token);
 		})
 		.catch();
@@ -150,14 +151,14 @@ class App extends Component {
 		}
 	}
 
-  handleChange(event) {
-    this.setState({emailInput: event.target.value});
-  }
+	handleChange(event) {
+    	this.setState({emailInput: event.target.value});
+  	}
 
-  handleSubmit(event) {
-    event.preventDefault();
-    this.addUser(this.state.emailInput, window.token);
-  }
+  	handleSubmit(event) {
+    	event.preventDefault();
+    	this.addUser(this.state.emailInput, window.token);
+  	}
 
 	componentDidMount() {
 		// Get cookies array
@@ -165,6 +166,7 @@ class App extends Component {
 		// token cookie will be cookies[2], so if it exists, we want to authenticate the user on page load
 		if(cookies[2] !== undefined) {
 			let token = cookies[2].split('=')[1]
+			console.log(token);
 			this.authenticatePageUser(token);
 		}
 	}
