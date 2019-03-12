@@ -4,7 +4,7 @@ const merge = require('webpack-merge');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-// Configs
+
 const baseConfig = require('./webpack.base.config');
 
 const prodConfiguration = env => {
