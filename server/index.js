@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 const authenticateGoogleToken = require('./googleTokenAuthenticator.js');
 const jwt = require('jsonwebtoken');
 const db = require('../database/index.js');
-const PORT = process.env.PORT || '3000';
+const PORT = 3000;
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }))

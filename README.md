@@ -64,12 +64,17 @@ Looks for a Google user token in the request body, validates it, and generates a
 ```javascript
 http://lvh.me:3000/api/login
 ```
-Looks for a token in the Bearer header, parses it if it finds one, and responds with the user's info to be displated on the page
+Looks for a token in the authorization header, parses it if it finds one, and responds with the user's info to be displated on the page
 
 ```javascript
 http://lvh.me:3000/api/adduser
 ```
-Also looks for a token, then adds the email in the body to the registered emails on the server after verifying that it is, indeed, an email 
+Also looks for a token in the authorization, then adds the email in the body to the registered emails on the server after using regex to verify that it is, indeed, an email.
+
+```javascript
+http://lvh.me:3000/api/users
+```
+Expects an auth token, and returns an array of all users once verified
 
 ## Dev Tools
 
@@ -92,10 +97,7 @@ If you're interested in the tools I used for building the app, feel free to add 
     "css-loader": "^0.28.11",
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.4.3",
-    "node-sass": "^4.8.3",
     "optimize-css-assets-webpack-plugin": "^4.0.0",
-    "sass-loader": "^7.0.3",
-    "style-loader": "^0.21.0",
     "uglifyjs-webpack-plugin": "^1.2.5",
     "webpack": "^4.12.0",
     "webpack-cli": "^3.0.8",
