@@ -44,7 +44,7 @@ And you should be all set to visit http://lvh.me:3000!
 
 ## Using the app
 
-If you're interested, here's a link to a youtube video of the app in action:
+If you're interested, here's a link to a youtube video of the app in action: https://www.youtube.com/watch?v=y9EZPdliyiQ&feature=youtu.be
 
 Using the app is fairly straightforward - sign in with the Gmail from your mySQL database, and a token will be generated on the backend and saved to your cookies for two days. 
 
@@ -64,7 +64,7 @@ Looks for a Google user token in the request body, validates it, and generates a
 ```javascript
 http://lvh.me:3000/api/login
 ```
-Looks for a token in the authorization header, parses it if it finds one, and responds with the user's info to be displated on the page
+Looks for a token in the authorization header, parses it if it finds one, and responds with the user's info to be displayed on the page.
 
 ```javascript
 http://lvh.me:3000/api/adduser
@@ -74,7 +74,7 @@ Also looks for a token in the authorization, then adds the email in the body to 
 ```javascript
 http://lvh.me:3000/api/users
 ```
-Expects an auth token, and returns an array of all users once verified
+Expects an auth token, and returns an array of all user objects once verified.
 
 ## Dev Tools
 
