@@ -14,15 +14,6 @@ CREATE TABLE IF NOT EXISTS users (
 INSERT INTO users (user_id, email)
 VALUES (null, 'kencrim@gmail.com');
 
-/* The following commands are to help prevent the MySQL 8.0+ 
- *  compatibility issue referenced in database/index.js */
-
--- DROP USER IF EXISTS nodeuser@'localhost';
--- CREATE USER nodeuser@'localhost' IDENTIFIED BY 'pw';
--- GRANT ALL PRIVILEGES ON *.* TO 'nodeuser'@'localhost' WITH GRANT OPTION;
-
--- ALTER USER 'nodeuser'@localhost IDENTIFIED WITH mysql_native_password BY 'pw';
-
 /*  Execute this file from the command line by running:
  *    mysql -u root < database/schema.sql
  *  from the root directory to create the database 

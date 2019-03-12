@@ -1,9 +1,6 @@
 const mysql = require('mysql');
 const config = require('./db_config.js');
 
-/* The connection string is used to circumvent the NodeJS MySQL library's compatibility issue introduced
- by MySQL version 8.0+'s use of SHA2 instead of SHA256 */  
-// const connString = `mysql://${config.options.user}:${config.options.password}@${config.options.host}/${config.options.db}?charset=utf8_general_ci&timezone=-0700`;
 const db = mysql.createConnection(config.options);
 
 module.exports.findUser = (email, callback) => {
