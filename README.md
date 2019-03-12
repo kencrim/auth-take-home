@@ -1,6 +1,8 @@
 ## OAuth2 Project Readme
+(https://github.com/kencrim/auth-take-home)
 
 Hi! Hopefully everything below will be sufficient to answer your questions and get you up and running! 
+
 
 ## Getting Started
 
@@ -44,9 +46,9 @@ And you should be all set to visit http://lvh.me:3000!
 
 If you're interested, here's a link to a youtube video of the app in action:
 
-Using the app is fairly straightforward - sign in with whichever Google account you've inserted into your mySQL database, and a token will be generated on the backend and saved to your cookies for the site for two days. 
+Using the app is fairly straightforward - sign in with the Gmail from your mySQL database, and a token will be generated on the backend and saved to your cookies for two days. 
 
-For convenience of the purposes of this project, the token is also logged to the console when it's first generated, or if you login with a saved token.
+For convenience and for the purposes of this project, the token is also logged to the console when it's first generated, or if you login with a saved token.
 
 ## API
 
@@ -55,12 +57,23 @@ If you'd prefer to send your own requests to the API, just grab a valid token fr
 ### Endpoints
 
 ```javascript
+http://lvh.me:3000/api/auth
+```
+Looks for a Google user token in the request body, validates it, and generates a shiny new user token for the API.
+
+```javascript
 http://lvh.me:3000/api/login
 ```
+Looks for a token in the Bearer header, parses it if it finds one, and responds with the user's info to be displated on the page
+
+```javascript
+http://lvh.me:3000/api/adduser
+```
+Also looks for a token, then adds the email in the body to the registered emails on the server after verifying that it is, indeed, an email 
 
 ## Dev Tools
 
-If you're interested in the tools I used for building the app, feel free to add the following dev dependencies to the package json
+If you're interested in the tools I used for building the app, feel free to add the following dev dependencies to the package json:
 
 ```javascript
   "devDependencies": {
@@ -91,7 +104,7 @@ If you're interested in the tools I used for building the app, feel free to add 
     "webpack-visualizer-plugin": "^0.1.11"
   }
 ```
-along with this prestart script
+... along with this prestart script:
 
 ```bash
 webpack --mode production --config config/webpack.prod.config.js --env.PLATFORM=production --env.VERSION=stag --progress,
